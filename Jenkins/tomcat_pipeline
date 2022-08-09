@@ -1,32 +1,20 @@
 pipeline {
-    agent any
+    agent { label 'my_slave1'}
 
     stages {
         stage ('Checkout SCM') {
 
             steps {
-                withMaven(maven : 'maven') {
-                    sh 'mvn clean compile'
-                }
+               checkout scm
             }
         }
 
-        stage ('Testing Stage') {
+        stage ('Build') {
 
             steps {
-                withMaven(maven : 'maven') {
-                    sh 'mvn test'
-                }
+               sh 'mvn clean install'
             }
         }
 
-
-        stage ('Deployment Stage') {
-            steps {
-                withMaven(maven : 'maven') {
-                    sh 'mvn deploy'
-                }
-            }
-        }
-    }
+       }
 }
