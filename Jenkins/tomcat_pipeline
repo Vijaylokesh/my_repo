@@ -1,6 +1,8 @@
 pipeline {
     agent { label 'my_slave1'}
-
+    tools{
+        maven 'maven3.8.6'
+    }
     stages {
         stage ('Checkout SCM') {
 
@@ -15,6 +17,17 @@ pipeline {
                sh 'mvn clean install'
             }
         }
+        
+        stage ('deploy') {
 
+            steps {
+                sshagent(['Tomact_server']) {
+          sh "scp -o StrictHostKeyChecking=no  webapp/target/webapp.war  ec2-user@34.207.81.39:/usr/local/tomcat9/webapps"
+                }
+                    
+                }
+        }
+
+        
        }
 }
